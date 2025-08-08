@@ -27,7 +27,12 @@ const SubscriptionForm = () => {
   const handleSubscribe = async () => {
     try {
       console.log("Access Token before subscription:",accessToken);
-      const { order_id, amount, currency } = await dispatch(createSubscription()).unwrap();
+      if (!accessToken) {
+      console.error("No access token available");
+      return;
+    }
+      const result = await dispatch(createSubscription()).unwrap();
+    const { order_id, amount, currency } = result;
 
       // Load Razorpay script if not already loaded
       await loadRazorpayScript();
@@ -46,13 +51,13 @@ const SubscriptionForm = () => {
             razorpay_signature: response.razorpay_signature,
           };
 
-          // Dispatch verifyPayment action
-          console.log("Dispatching verifyPayment:", paymentData);
-
-          await dispatch(verifyPayment(paymentData));
-          // After successful payment verification, navigate to the payment success page
+          try {
+          await dispatch(verifyPayment(paymentData)).unwrap();
           navigate("/payment-success");
-        },
+        } catch (verifyError) {
+          console.error("Payment verification failed:", verifyError);
+        }
+      },
         modal: {
           ondismiss: function() {
             console.log("Payment Modal dismissed.");
