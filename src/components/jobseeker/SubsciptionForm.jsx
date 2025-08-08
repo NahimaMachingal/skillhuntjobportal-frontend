@@ -9,6 +9,13 @@ const SubscriptionForm = () => {
   const { accessToken } = useSelector((state) => state.auth);
   const { order, status, error } = useSelector((state) => state.subscription);
 
+  // ADD THIS DEBUG CODE HERE (right after your state selectors)
+  useEffect(() => {
+    console.log("Current auth state:", { accessToken });
+    console.log("Access token type:", typeof accessToken);
+    console.log("Access token length:", accessToken?.length);
+  }, [accessToken]);
+
   // Function to dynamically load Razorpay script
   const loadRazorpayScript = () => {
     return new Promise((resolve, reject) => {
