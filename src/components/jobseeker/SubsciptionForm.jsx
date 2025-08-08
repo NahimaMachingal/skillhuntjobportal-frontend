@@ -11,10 +11,13 @@ const SubscriptionForm = () => {
 
   // ADD THIS DEBUG CODE HERE (right after your state selectors)
   useEffect(() => {
-    console.log("Current auth state:", { accessToken });
-    console.log("Access token type:", typeof accessToken);
-    console.log("Access token length:", accessToken?.length);
+    console.log("=== AUTH DEBUG ===");
+    console.log("Access token:", accessToken);
+    console.log("Token type:", typeof accessToken);
+    console.log("Token length:", accessToken?.length);
+    console.log("First 20 chars:", accessToken?.substring(0, 20));
   }, [accessToken]);
+
 
   // Function to dynamically load Razorpay script
   const loadRazorpayScript = () => {
@@ -39,7 +42,8 @@ const SubscriptionForm = () => {
       return;
     }
       const result = await dispatch(createSubscription()).unwrap();
-    const { order_id, amount, currency } = result;
+      console.log("Subscription result:", result);
+      const { order_id, amount, currency } = result;
 
       // Load Razorpay script if not already loaded
       await loadRazorpayScript();
