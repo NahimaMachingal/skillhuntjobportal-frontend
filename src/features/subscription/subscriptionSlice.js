@@ -13,7 +13,7 @@ export const createSubscription = createAsyncThunk(
 
       console.log("Full auth state:", state.auth);
       console.log("Access token:", accessToken);
-      console.log("Token length:", accessToken?.length);
+      console.log("Token type:", typeof accessToken);
 
       if (!accessToken) {
         return rejectWithValue("Access token is missing.");
@@ -34,6 +34,11 @@ export const createSubscription = createAsyncThunk(
       console.error('Full error object:', error);
       console.error('Response data:', error.response?.data);
       console.error('Response status:', error.response?.status);
+      // **CRITICAL FIX**: Return error message string, not object
+      const errorMessage = error.response?.data?.error || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Subscription failed';
       return rejectWithValue(error.response?.data || 'Subscription failed');
     }
   }
